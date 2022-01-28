@@ -44,15 +44,22 @@ describe('AllReviewsComponent', () => {
   });
 
   it('should get the correct reviews', () => {
+
+    component.reviews.subscribe(
+      result => {
+        expect(result).toHaveSize(3);
+        expect(result[0]).toEqual ({ title: 'book-1', rating: 5 });
+        expect(result[1]).toEqual ({ title: 'book-1', rating: 1 });
+        expect(result[2]).toEqual ({ title: 'book-2', rating: 4 });
+      }
+    )
+
     const request = httpTestingController.expectOne(data =>
       data.url === 'https://localhost:5001/BookReview' && data.method === 'GET'
     );
 
     request.flush(mockReviews);
 
-    expect(component.reviews).toHaveSize(3);
-    expect(component.reviews[0]).toEqual ({ title: 'book-1', rating: 5 });
-    expect(component.reviews[1]).toEqual ({ title: 'book-1', rating: 1 });
-    expect(component.reviews[2]).toEqual ({ title: 'book-2', rating: 4 });
+
   });
 });

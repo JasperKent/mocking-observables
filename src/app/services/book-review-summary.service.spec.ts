@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { BookReview } from './book-review';
 import { BookReviewRepositoryService } from './book-review-repository.service';
 
@@ -23,7 +24,7 @@ describe('BookReviewSummaryService', () => {
   ] as BookReview[]
 
   const mockBookReviewRepositoryService = jasmine.createSpyObj<BookReviewRepositoryService>({
-    getReviews: mockReviews
+    getReviews: of(mockReviews)
   })
 
   beforeEach(() => {
@@ -43,10 +44,14 @@ describe('BookReviewSummaryService', () => {
   it('should calculate correct averages', () => {
     const summaries = service.reviewSummaries;
 
-    expect(summaries).toHaveSize(2);
-    expect(summaries[0].title).toBe('book-1');
-    expect(summaries[0].rating).toBe(3);
-    expect(summaries[1].title).toBe('book-2');
-    expect(summaries[1].rating).toBe(4);
+    summaries.subscribe(
+      result =>{
+        expect(result).toHaveSize(2);
+        expect(result[0].title).toBe('book-1');
+        expect(result[0].rating).toBe(3);
+        expect(result[1].title).toBe('book-2');
+        expect(result[1].rating).toBe(4);
+      }
+    );
   });
 });
